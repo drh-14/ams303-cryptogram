@@ -5,10 +5,15 @@ import string
 
 # 5 letter keyword
 
-def compute_ic(s):
+# shift 4 by 2
+# shift 2 by 1
+
+# LEAST
+
+def compute_ic(s, word_length):
     s = s.replace(" ", "").replace("\n", "")
     letters = []
-    for i in range(0, len(s), 5):
+    for i in range(0, len(s), word_length):
         letters.append(s[i])
     n = len(letters)
     freqs = Counter(letters)
@@ -21,25 +26,49 @@ def frequency_graph(s):
         letters = []
         for j in range(i, len(s), 5):
             letters.append(s[j])
-            n = len(letters)
-            freqs = {}
-            for uppercase_letter in list(string.ascii_uppercase):
-               freqs[uppercase_letter] = 0
-            for letter in letters:
-                freqs[letter] += 1
-            labels = sorted(list(freqs.keys())) * 2
-            frequencies = sorted(list(freqs.values())) * 2
-            x = range(len(labels))
-            ax[i].bar(x, frequencies, color = "blue")
-            ax[i].set_xticks(x,labels)
+        freqs = {}
+        for uppercase_letter in list(string.ascii_uppercase):
+            freqs[uppercase_letter] = 0
+        for letter in letters:
+            freqs[letter] += 1
+        freqs = dict(sorted(freqs.items()))
+        labels, frequencies = list(freqs.keys()) * 2, list(freqs.values()) * 2
+        x = range(len(labels))
+        ax[i].bar(x, frequencies, color = "blue")
+        ax[i].set_xticks(x,labels)
     fig.suptitle("Frequency Strips")
     plt.show()
+
+def output_frequencies(s):
+    res = []
+    s = s.replace(" ", "").replace("\n", "")
+    for i in range(5):
+        letters = []
+        for j in range(i, len(s), 5):
+            letters.append(s[j])
+        ctr = {}
+        for ltr in list(string.ascii_uppercase):
+            ctr[ltr] = 0
+        for l in letters:
+            ctr[l] += 1
+        sorted_keys = sorted(list(ctr.keys()))
+        sorted_values = [ctr[s] for s in sorted_keys]
+        res.append(" ".join([str(s) for s in sorted_values]))
+    print(" \n".join(res))
+            
+        
     
+def compute_possible_words():
+    letters = list(string.ascii_uppercase) * 2
+    offsets = [5, 12, 16, 24, 23]
+    for i in range(52):
+        s = ""
+        for o in offsets:
+            if  i - o < 0:
+                break
+            s += letters[i - o]
+        if len(s) == 5:
+            print(s)
+
 if __name__ == "__main__":
-    frequency_graph("""OZYRD TDZTK TNAGW JSHAS OZIRW LQPQH OZIKF TIYSA KOIRS MVIVO 
-TSIPL MCMRT BZIMD THZVO MHBMN LBDPT DMAKN THAEB MRITC GEDNB 
-XDKQH YBYMN ZEDPT XKAGC TQDTR ZOYGG KHVAI ICUMH LHXSF REOKF 
-LUIRS LQZQH OZICU OZICU OCJTN KNYAH UMZGT XEOVO TWISL FMYGD 
-TSDTN JSZVR OLDQT ZDOSF LSSAT DYIPO LZBWB KWIGW VEZVT BHVAR 
-XYYWB KCOVO TDHG
-""")
+    compute_possible_words()
